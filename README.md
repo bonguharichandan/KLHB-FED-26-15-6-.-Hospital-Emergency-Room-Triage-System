@@ -1,4 +1,4 @@
-# KLHB-FED-26-15-6-.-Hospital-Emergency-Room-Triage-System
+.# KLHB-FED-26-15-6-.-Hospital-Emergency-Room-Triage-System
 # Hospital Emergency-Room Triage System
 
 ## Project Information
@@ -229,7 +229,7 @@ final
 
 **ID:** 2620030271
 
-### SADDHARU DINESH KUMAR
+### SADDHARU DINESH
 
 **ID:** 2620090076
 
