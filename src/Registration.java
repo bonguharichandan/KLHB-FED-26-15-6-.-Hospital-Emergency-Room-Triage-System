@@ -3,8 +3,6 @@ import java.util.Scanner;
 public class Registration {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
-        // Standard variables for patient registration
         String name;
         int birthYear;
         int birthMonth;
@@ -17,8 +15,6 @@ public class Registration {
         String lastOralIntake;
         
         boolean hasRedFlags = false;
-
-        // Visual check array for Red-Flag symptoms
         String[] redFlagsList = {
             "Chest pain radiating to arm/jaw",
             "Sudden severe (thunderclap) headache",
@@ -67,7 +63,7 @@ public class Registration {
                 hasRedFlags = true;
             }
         }
-        scanner.nextLine(); // Clear buffer
+        scanner.nextLine(); 
 
         if (hasRedFlags) {
             System.out.println("\n[ALERT]: Red-flag symptoms identified! Escalating priority to triage nurse.");
@@ -90,9 +86,6 @@ public class Registration {
             emergencyContact = scanner.nextLine();
             System.out.print("Enter Insurance Information: ");
             insuranceInfo = scanner.nextLine();
-        
-
-        // --- STEP 5: FINAL PRINT SUMMARY ---
         System.out.println("\n==================================================");
         System.out.println("         COMPLETED REGISTRATION SUMMARY           ");
         System.out.println("==================================================");
@@ -110,6 +103,6 @@ public class Registration {
         System.out.println("Insurance Info   : " + insuranceInfo);
         System.out.println("==================================================");
 
-        scanner.close();
+    
     }
 }
