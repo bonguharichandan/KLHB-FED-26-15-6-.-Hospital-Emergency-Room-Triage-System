@@ -101,7 +101,7 @@ public class Registration {
         System.out.println("Address          : " + address);
         System.out.println("Emergency Contact: " + emergencyContact);
         System.out.println("Insurance Info   : " + insuranceInfo);
-        System.out.println("==================================================");
+        System.out.println("===================================================");
 
     
     }
