@@ -46,7 +46,7 @@ public class Registration {
         System.out.print("Current Medications: ");
         medications = scanner.nextLine();
 
-        System.out.print("Known Allergies: ");
+        System.out.print("Known Allergies:  ");
         allergies = scanner.nextLine();
 
         System.out.print("Last Oral Intake (What and when did you last eat/drink?): ");
