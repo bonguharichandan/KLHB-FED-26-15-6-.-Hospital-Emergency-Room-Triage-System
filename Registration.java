@@ -3,6 +3,8 @@ import java.util.Scanner;
 public class Registration {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+
+        // Standard variables for patient registration
         String name;
         int birthYear;
         int birthMonth;
@@ -15,6 +17,8 @@ public class Registration {
         String lastOralIntake;
         
         boolean hasRedFlags = false;
+
+        // Visual check array for Red-Flag symptoms
         String[] redFlagsList = {
             "Chest pain radiating to arm/jaw",
             "Sudden severe (thunderclap) headache",
@@ -46,7 +50,7 @@ public class Registration {
         System.out.print("Current Medications: ");
         medications = scanner.nextLine();
 
-        System.out.print("Known Allergies:  ");
+        System.out.print("Known Allergies: ");
         allergies = scanner.nextLine();
 
         System.out.print("Last Oral Intake (What and when did you last eat/drink?): ");
@@ -63,7 +67,7 @@ public class Registration {
                 hasRedFlags = true;
             }
         }
-        scanner.nextLine(); 
+        scanner.nextLine(); // Clear buffer
 
         if (hasRedFlags) {
             System.out.println("\n[ALERT]: Red-flag symptoms identified! Escalating priority to triage nurse.");
@@ -86,6 +90,9 @@ public class Registration {
             emergencyContact = scanner.nextLine();
             System.out.print("Enter Insurance Information: ");
             insuranceInfo = scanner.nextLine();
+        
+
+        // --- STEP 5: FINAL PRINT SUMMARY ---
         System.out.println("\n==================================================");
         System.out.println("         COMPLETED REGISTRATION SUMMARY           ");
         System.out.println("==================================================");
@@ -101,8 +108,8 @@ public class Registration {
         System.out.println("Address          : " + address);
         System.out.println("Emergency Contact: " + emergencyContact);
         System.out.println("Insurance Info   : " + insuranceInfo);
-        System.out.println("===================================================");
+        System.out.println("==================================================");
 
-    
+        scanner.close();
     }
 }
