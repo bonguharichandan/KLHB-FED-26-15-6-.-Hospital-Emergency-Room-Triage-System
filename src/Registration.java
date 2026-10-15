@@ -103,6 +103,6 @@ public class Registration {
         System.out.println("Insurance Info   : " + insuranceInfo);
         System.out.println("===================================================");
 
-    scanner.close();
+
     }
 }
