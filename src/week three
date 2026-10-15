@@ -1,0 +1,68 @@
+// ER Triage System - Week 3: branches and status transitions
+// Compile and run: javac week03.java && java Main
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// ===== Main.java =====
+// Week 3: if/else branches for severity bands, and status transitions (WAITING -> IN_TREATMENT -> DISCHARGED).
+class Main {
+    static final String WAITING = "WAITING", IN_TREATMENT = "IN_TREATMENT", DISCHARGED = "DISCHARGED";
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        List<String> names = new ArrayList<>();
+        List<Integer> severities = new ArrayList<>();
+        List<String> statuses = new ArrayList<>();
+
+        System.out.println("=== ER Triage ===");
+        while (true) {
+            System.out.println("1) Admit  2) Call next  3) Discharge  4) Re-triage  5) Report  6) Exit");
+            System.out.print("Choice: ");
+            String choice = in.nextLine().trim();
+
+            if (choice.equals("1")) {
+                System.out.print("Name: ");
+                String name = in.nextLine().trim();
+                System.out.print("SYS DIA HR TEMP (e.g. 90 60 130 36.8): ");
+                String[] v = in.nextLine().trim().split("\\s+");
+                double sys = Double.parseDouble(v[0]);
+                double hr = Double.parseDouble(v[2]);
+                double temp = Double.parseDouble(v[3]);
+
+                int severity;
+                if (sys <= 90 || hr >= 130 || hr <= 40 || temp >= 40.0) severity = 1;   // CRITICAL
+                else if (sys < 110 || hr >= 110 || temp >= 39.0) severity = 2;          // URGENT
+                else if (hr >= 100 || temp >= 38.0) severity = 3;                       // SEMI-URGENT
+                else severity = 4;                                                      // MINOR
+
+                names.add(name);
+                severities.add(severity);
+                statuses.add(WAITING);
+                System.out.println("-> Patient #" + names.size() + " severity " + severity);
+            } else if (choice.equals("2")) {
+                int next = statuses.indexOf(WAITING);      // first waiting patient in arrival order
+                if (next == -1) {
+                    System.out.println("No patients waiting.");
+                } else {
+                    statuses.set(next, IN_TREATMENT);
+                    System.out.println("-> Calling " + names.get(next) + " (sev " + severities.get(next) + ")");
+                }
+            } else if (choice.equals("3")) {
+                int current = statuses.indexOf(IN_TREATMENT);
+                if (current == -1) {
+                    System.out.println("Invalid transition: nobody is in treatment yet.");
+                } else {
+                    statuses.set(current, DISCHARGED);
+                    System.out.println("-> " + names.get(current) + " discharged.");
+                }
+            } else if (choice.equals("6")) {
+                System.out.println("Shift closed.");
+                break;
+            } else {
+                System.out.println("Not built yet.");
+            }
+        }
+    }
+}
