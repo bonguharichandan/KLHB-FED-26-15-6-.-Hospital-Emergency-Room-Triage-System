@@ -1,0 +1,33 @@
+// ER Triage System - Week 1: menu loop
+// Compile and run: javac week01.java && java Main
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// ===== Main.java =====
+// Week 1: a console menu loop. Admit adds a name to the queue and prints the queue.
+class Main {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        List<String> queue = new ArrayList<>();
+
+        System.out.println("=== ER Triage ===");
+        while (true) {
+            System.out.println("1) Admit  2) Call next  3) Discharge  4) Re-triage  5) Report  6) Exit");
+            System.out.print("Choice: ");
+            String choice = in.nextLine().trim();
+
+            if (choice.equals("1")) {
+                System.out.print("Name: ");
+                queue.add(in.nextLine().trim());
+                System.out.println("Waiting queue: " + queue);
+            } else if (choice.equals("6")) {
+                System.out.println("Shift closed.");
+                break;
+            } else {
+                System.out.println("Not built yet.");
+            }
+        }
+    }
+}
