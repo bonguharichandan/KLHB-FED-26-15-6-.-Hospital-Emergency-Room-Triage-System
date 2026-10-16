@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 // ===== Main.java =====
 // Week 10: the shift is loaded from ./data at startup and saved after every action.
-class Main {
+class week12 {
     static final Scanner in = new Scanner(System.in);
     static TriageUnit unit;
 
