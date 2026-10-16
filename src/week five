@@ -1,0 +1,141 @@
+// ER Triage System - Week 5: methods and recursion
+// Compile and run: javac week05.java && java Main
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// ===== Main.java =====
+// Week 5: one method per operation. Recursion walks the queue to find the most urgent waiting patient.
+class Main {
+    static final String WAITING = "WAITING", IN_TREATMENT = "IN_TREATMENT", DISCHARGED = "DISCHARGED";
+    static final Scanner in = new Scanner(System.in);
+    static final List<String> names = new ArrayList<>();
+    static final List<Integer> severities = new ArrayList<>();
+    static final List<String> statuses = new ArrayList<>();
+    static final List<String> doctors = new ArrayList<>(List.of("Dr. Menon", "Dr. Kapoor"));
+    static final List<Integer> doctorPatient = new ArrayList<>(List.of(-1, -1));   // -1 means free
+
+    public static void main(String[] args) {
+        System.out.println("=== ER Triage ===");
+        while (true) {
+            System.out.println("1) Admit  2) Call next  3) Discharge  4) Re-triage  5) Report  6) Exit");
+            System.out.print("Choice: ");
+            String choice = in.nextLine().trim();
+            switch (choice) {
+                case "1" -> admit();
+                case "2" -> callNext();
+                case "3" -> discharge();
+                case "4" -> retriage();
+                case "5" -> report();
+                case "6" -> {
+                    System.out.println("Shift closed.");
+                    return;
+                }
+                default -> System.out.println("Please pick 1-6.");
+            }
+        }
+    }
+
+    static void admit() {
+        System.out.print("Name: ");
+        String name = in.nextLine().trim();
+        int severity = severityOf(readVitals());
+        names.add(name);
+        severities.add(severity);
+        statuses.add(WAITING);
+        System.out.println("-> Patient #" + names.size() + " severity " + severity);
+    }
+
+    static double[] readVitals() {
+        System.out.print("SYS DIA HR TEMP (e.g. 90 60 130 36.8): ");
+        String[] parts = in.nextLine().trim().split("\\s+");
+        double[] v = new double[4];
+        for (int i = 0; i < 4; i++) v[i] = Double.parseDouble(parts[i]);
+        return v;
+    }
+
+    static int severityOf(double[] v) {
+        double sys = v[0], hr = v[2], temp = v[3];
+        if (sys <= 90 || hr >= 130 || hr <= 40 || temp >= 40.0) return 1;   // CRITICAL
+        if (sys < 110 || hr >= 110 || temp >= 39.0) return 2;               // URGENT
+        if (hr >= 100 || temp >= 38.0) return 3;                            // SEMI-URGENT
+        return 4;                                                           // MINOR
+    }
+
+    static void callNext() {
+        int best = mostUrgent(0, -1);
+        int doc = freeDoctor();
+        if (best == -1) {
+            System.out.println("No patients waiting.");
+        } else if (doc == -1) {
+            System.out.println("No free doctor - " + names.get(best) + " keeps waiting.");
+        } else {
+            statuses.set(best, IN_TREATMENT);
+            doctorPatient.set(doc, best);
+            System.out.println("-> Calling " + names.get(best) + " (sev " + severities.get(best)
+                    + ") to " + doctors.get(doc));
+        }
+    }
+
+    // Recursion: walk the queue one position at a time, keeping the most urgent waiting patient.
+    static int mostUrgent(int i, int best) {
+        if (i == names.size()) return best;
+        boolean better = statuses.get(i).equals(WAITING)
+                && (best == -1 || severities.get(i) < severities.get(best));
+        return mostUrgent(i + 1, better ? i : best);
+    }
+
+    static int freeDoctor() {
+        for (int d = 0; d < doctors.size(); d++) {
+            if (doctorPatient.get(d) == -1) return d;
+        }
+        return -1;
+    }
+
+    static int askPatient() {
+        System.out.print("Patient #: ");
+        return Integer.parseInt(in.nextLine().trim()) - 1;
+    }
+
+    static void discharge() {
+        int p = askPatient();
+        if (p < 0 || p >= names.size()) {
+            System.out.println("No such patient.");
+        } else if (!statuses.get(p).equals(IN_TREATMENT)) {
+            System.out.println("Invalid transition: " + names.get(p) + " is " + statuses.get(p));
+        } else {
+            statuses.set(p, DISCHARGED);
+            for (int d = 0; d < doctors.size(); d++) {
+                if (doctorPatient.get(d) == p) doctorPatient.set(d, -1);
+            }
+            System.out.println("-> " + names.get(p) + " discharged.");
+        }
+    }
+
+    static void retriage() {
+        int p = askPatient();
+        if (p < 0 || p >= names.size()) {
+            System.out.println("No such patient.");
+        } else if (!statuses.get(p).equals(WAITING)) {
+            System.out.println("Only waiting patients can be re-triaged.");
+        } else {
+            severities.set(p, severityOf(readVitals()));   // the scan in callNext repositions them automatically
+            System.out.println("-> " + names.get(p) + " now severity " + severities.get(p));
+        }
+    }
+
+    static void report() {
+        int waiting = 0;
+        System.out.println("# name            severity  status");
+        for (int i = 0; i < names.size(); i++) {
+            System.out.printf("%d %-15s %-9d %s%n", i + 1, names.get(i), severities.get(i), statuses.get(i));
+            if (statuses.get(i).equals(WAITING)) waiting++;
+        }
+        System.out.println("in queue: " + waiting);
+        for (int d = 0; d < doctors.size(); d++) {
+            int p = doctorPatient.get(d);
+            System.out.println(doctors.get(d) + ": " + (p == -1 ? "free" : "busy with #" + (p + 1)));
+        }
+    }
+}
